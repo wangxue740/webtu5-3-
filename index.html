@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>To-Do List</title>
+    </head>
+    <body>
+        <input type="text" id="taskInput" placeholder="task 3">
+        <button id="addBtn">Add Task</button>
+        <ul id="taskList"></ul>
+        <script>
+            let tasksArray = JSON.parse(localStorage.getItem("myTasks")) || [];
+            
+            let input = document.getElementById("taskInput");
+            let btn = document.getElementById("addBtn");
+            let list = document.getElementById("taskList");
+
+            btn.addEventListener("click", function() {
+                let text = input.value;
+                if (text === "") return;
+                
+                tasksArray.push(text);
+                localStorage.setItem("myTasks", JSON.stringify(tasksArray));
+                
+                input.value = "";
+                renderTasks();
+            });
+
+                       function renderTasks() {
+                list.innerHTML = "";
+                tasksArray.forEach(function(taskText, index) { 
+                    let newLi = document.createElement("li");
+                    newLi.textContent = taskText;
+                    newLi.addEventListener("click", function() {
+                        tasksArray.splice(index, 1);
+                        localStorage.setItem("myTasks", JSON.stringify(tasksArray));
+                        renderTasks();
+                    });
+                    
+                    list.appendChild(newLi);
+                });
+            }
+            renderTasks(); 
+        </script>
+    </body>
+</html>
